@@ -30,6 +30,11 @@ def get_temp_file(mode='w+b', bufsize=-1, desired_name='', in_dir='', delete=Non
         if e.errno != tempfile._errno.EEXIST: # pylint: disable=W0212
             raise
         prefix, _, suffix = desired_name.partition('.') 
+        if '.' in desired_name:
+            if not suffix:
+                prefix = prefix + '.' # prevent tempfile from messing with prefix
+            elif not prefix:
+                suffix = suffix + '.' # prevent tempfile from messing with suffix
         result = tempfile.NamedTemporaryFile(mode=mode, 
                                              bufsize=bufsize,
                                              suffix='.' + suffix, 
